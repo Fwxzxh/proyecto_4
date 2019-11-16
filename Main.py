@@ -20,9 +20,11 @@ def sumatoria(p, n, eje): # p= lista n=potencia eje=elegir si sumar x o y (true 
             if (i % 2) == 0:
                 suma += p[i]**n
         else:
-            if (i % 2) == 0:
-                suma = (p[i] ** n) * (p[i+1])
-
+            if (i % 2) != 0:
+                if n == 0:
+                    suma += p[i]
+                else:
+                    suma += (p[i-1] ** n) * (p[i])
     return suma
 
 
@@ -35,16 +37,23 @@ def matriz(mat, g):
             contador += 1
         potencia += 1
     mat[0,0] = 1
-    print(mat)
+    #print(mat)
     return mat
 
+
 def matrizE(mat, g):    #mat=matriz g=grado
+    contador = 0
+    matB = np.zeros((g))
     for i in range(g):
-        mat[i, g] = sumatoria(lectura(),contador, False)
+        matB[i] = sumatoria(lectura(),contador, False)
+        contador += 1
+    #print(matB)
+    return matB
+
 
 if __name__ == '__main__':
     g = int(input("ingrese el grado del polinomio"))
     g = g+1
     mat = np.zeros((g,g))
-    matrizE(matriz(mat, g),g)
-    print(lectura())
+    Result = (np.linalg.inv(matriz(mat, g)).dot(matrizE(matriz(mat, g), g))[::-1])
+    print(np.poly1d(Result))
