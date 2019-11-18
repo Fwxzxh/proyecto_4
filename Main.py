@@ -1,7 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def lectura():
-    file = open('C:\Archivos\Coeficientes1.txt', mode='r')
+    file = open('C:\Archivos\Coeficientes.txt', mode='r')
     puntosO = file.read()
     puntos = puntosO.splitlines()
     puntos1= []
@@ -37,7 +38,6 @@ def matriz(mat, g):
             contador += 1
         potencia += 1
     mat[0,0] = 1
-    #print(mat)
     return mat
 
 
@@ -47,13 +47,29 @@ def matrizE(mat, g):    #mat=matriz g=grado
     for i in range(g):
         matB[i] = sumatoria(lectura(),contador, False)
         contador += 1
-    #print(matB)
     return matB
 
+def grafica(result):
+    PuntosX = []
+    PuntosY = []
+    x = np.arange(-5,5,.01)
+    y = np.poly1d(result)(x)
+    plt.grid(True)
+    plt.plot(x,y, label="curva",color="blue")
+    puntos = lectura()
+    for i in range(len(puntos)):
+        if (i % 2) == 0:
+            PuntosX.append(puntos[i])
+        else:
+            PuntosY.append(puntos[i])
+    plt.scatter(PuntosX, PuntosY, label="puntos", color="red")
+    plt.legend()
+    plt.show()
 
 if __name__ == '__main__':
-    g = int(input("ingrese el grado del polinomio"))
+    g = int(input("ingrese el grado del polinomio "))
     g = g+1
     mat = np.zeros((g,g))
     Result = (np.linalg.inv(matriz(mat, g)).dot(matrizE(matriz(mat, g), g))[::-1])
     print(np.poly1d(Result))
+    grafica(Result)
